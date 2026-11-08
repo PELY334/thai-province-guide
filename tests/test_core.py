@@ -3,6 +3,7 @@ A tiny bag-of-words embedder stands in for fastembed; the LLM is a scripted fake
 
 from __future__ import annotations
 
+import dataclasses
 import hashlib
 import json
 from types import SimpleNamespace
@@ -48,6 +49,9 @@ class FakeEmbedder:
 def idx(monkeypatch):
     ix = Index.build(DOCS, 12, FakeEmbedder())
     monkeypatch.setattr(index_mod, "get_index", lambda *a, **k: ix)
+    # tests must not depend on the tuned defaults in .env / config
+    monkeypatch.setattr(index_mod, "settings",
+                        dataclasses.replace(index_mod.settings, min_score=0.0, top_k=5))
     return ix
 
 

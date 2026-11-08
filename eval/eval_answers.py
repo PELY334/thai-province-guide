@@ -19,6 +19,8 @@ the README can be audited.
 
     python eval/eval_answers.py                     # all systems
     python eval/eval_answers.py --systems rag agent
+    CHUNK_WORDS=250 MIN_SCORE=0 python eval/eval_answers.py --systems rag --tag @w250
+    python eval/eval_answers.py --rescore            # re-score saved answers after a label fix
 """
 
 from __future__ import annotations
@@ -101,6 +103,11 @@ def summarize(name: str, rows: list[dict]) -> dict:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--systems", nargs="+", default=["closed_book", "rag_no_floor", "rag", "agent"])
+    ap.add_argument("--rescore", action="store_true",
+                    help="don't call the model: re-score the saved answers_<system>.jsonl "
+                    "against the current labels (use after fixing a gold label)")
+    ap.add_argument("--tag", default="", help="suffix for result names, e.g. '@w250' when "
+                    "running with CHUNK_WORDS=250 in the environment")
     args = ap.parse_args()
     questions = [json.loads(line) for line in (EVAL_DIR / "questions.jsonl").read_text("utf-8").splitlines()]
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
@@ -109,9 +116,26 @@ def main() -> int:
               "top_k": settings.top_k, "min_score": settings.min_score}
     print("config:", config)
     summaries = []
+    if args.rescore:
+        old = json.loads((RESULTS_DIR / "answers_summary.json").read_text())
+        by_id = {q["id"]: q for q in questions}
+        for name in args.systems:
+            path = RESULTS_DIR / f"answers_{name}{args.tag}.jsonl"
+            rows = []
+            for line in path.read_text("utf-8").splitlines():
+                out = json.loads(line)
+                q = by_id[out["id"]]
+                out["correct"] = bool(q["evidence"]) and not out["abstained"] and is_correct(out["answer"], q)
+                rows.append({"q": q, "out": out, "correct": out["correct"]})
+            path.write_text("".join(json.dumps(r["out"], ensure_ascii=False) + "\n" for r in rows), "utf-8")
+            s = summarize(name + args.tag, rows)
+            s["config"] = old.get(name + args.tag, {}).get("config", config)
+            summaries.append(s)
+            print(name + args.tag, s["correct"], s["abstain_ok_n"])
+        args.systems = []
     for name in args.systems:
         rows = []
-        with open(RESULTS_DIR / f"answers_{name}.jsonl", "w", encoding="utf-8") as f:
+        with open(RESULTS_DIR / f"answers_{name}{args.tag}.jsonl", "w", encoding="utf-8") as f:
             for q in questions:
                 try:
                     out = run_system(name, q)
@@ -121,18 +145,16 @@ def main() -> int:
                 correct = bool(q["evidence"]) and not out["abstained"] and is_correct(out["answer"], q)
                 rows.append({"q": q, "out": out, "correct": correct})
                 f.write(json.dumps({"id": q["id"], "type": q["type"], "question": q["question"],
-                                    "correct": correct, **{k: v for k, v in out.items() if k != "sources"},
-                                    "source_ids": [f"{s['province']}|{s['section']}" for s in out["sources"]]},
-                                   ensure_ascii=False) + "\n")
+                                    "correct": correct, **out}, ensure_ascii=False) + "\n")
                 mark = "ok " if correct or (not q["evidence"] and out["abstained"]) else "XX "
                 print(f"[{name}] {mark}{q['id']} {out['answer'][:90]!r}")
-        s = summarize(name, rows)
+        s = summarize(name + args.tag, rows)
+        s["config"] = config
         summaries.append(s)
         print(json.dumps(s, indent=1))
     path = RESULTS_DIR / "answers_summary.json"
     old = json.loads(path.read_text()) if path.exists() else {}
     old.update({s["system"]: s for s in summaries})
-    old["_config"] = config
     path.write_text(json.dumps(old, indent=1))
     print(f"wrote {path}")
     return 0
