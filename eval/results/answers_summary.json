@@ -1,0 +1,132 @@
+{
+ "closed_book": {
+  "system": "closed_book",
+  "n": 40,
+  "accuracy": 0.058823529411764705,
+  "correct": "2/34",
+  "abstain_ok": 0.6666666666666666,
+  "abstain_ok_n": "4/6",
+  "false_abstain": 0.029411764705882353,
+  "citation_prec": null,
+  "overall": 0.15,
+  "by_type": {
+   "multi_calc": "0/4",
+   "reverse": "0/7",
+   "single": "2/23"
+  },
+  "avg_seconds": 0.45725,
+  "avg_tool_steps": 0.0,
+  "config": {
+   "model": "gemma-4-E4B-it",
+   "embed_model": "BAAI/bge-small-en-v1.5",
+   "retriever": "dense",
+   "chunk_words": 60,
+   "top_k": 5,
+   "min_score": 0.72
+  }
+ },
+ "rag_no_floor": {
+  "system": "rag_no_floor",
+  "n": 40,
+  "accuracy": 0.9117647058823529,
+  "correct": "31/34",
+  "abstain_ok": 1.0,
+  "abstain_ok_n": "6/6",
+  "false_abstain": 0.058823529411764705,
+  "citation_prec": 0.8048780487804879,
+  "overall": 0.925,
+  "by_type": {
+   "multi_calc": "1/4",
+   "reverse": "7/7",
+   "single": "23/23"
+  },
+  "avg_seconds": 0.6855,
+  "avg_tool_steps": 0.0,
+  "config": {
+   "model": "gemma-4-E4B-it",
+   "embed_model": "BAAI/bge-small-en-v1.5",
+   "retriever": "dense",
+   "chunk_words": 60,
+   "top_k": 5,
+   "min_score": 0.72
+  }
+ },
+ "rag": {
+  "system": "rag",
+  "n": 40,
+  "accuracy": 0.8823529411764706,
+  "correct": "30/34",
+  "abstain_ok": 1.0,
+  "abstain_ok_n": "6/6",
+  "false_abstain": 0.08823529411764706,
+  "citation_prec": 0.8421052631578947,
+  "overall": 0.9,
+  "by_type": {
+   "multi_calc": "2/4",
+   "reverse": "5/7",
+   "single": "23/23"
+  },
+  "avg_seconds": 0.55025,
+  "avg_tool_steps": 0.0,
+  "config": {
+   "model": "gemma-4-E4B-it",
+   "embed_model": "BAAI/bge-small-en-v1.5",
+   "retriever": "dense",
+   "chunk_words": 60,
+   "top_k": 5,
+   "min_score": 0.72
+  }
+ },
+ "agent": {
+  "system": "agent",
+  "n": 40,
+  "accuracy": 0.8823529411764706,
+  "correct": "30/34",
+  "abstain_ok": 1.0,
+  "abstain_ok_n": "6/6",
+  "false_abstain": 0.11764705882352941,
+  "citation_prec": 0.825,
+  "overall": 0.9,
+  "by_type": {
+   "multi_calc": "4/4",
+   "reverse": "5/7",
+   "single": "21/23"
+  },
+  "avg_seconds": 1.0887499999999999,
+  "avg_tool_steps": 1.05,
+  "config": {
+   "model": "gemma-4-E4B-it",
+   "embed_model": "BAAI/bge-small-en-v1.5",
+   "retriever": "dense",
+   "chunk_words": 60,
+   "top_k": 5,
+   "min_score": 0.72
+  }
+ },
+ "rag@w250_nofloor": {
+  "system": "rag@w250_nofloor",
+  "n": 40,
+  "accuracy": 0.9117647058823529,
+  "correct": "31/34",
+  "abstain_ok": 1.0,
+  "abstain_ok_n": "6/6",
+  "false_abstain": 0.058823529411764705,
+  "citation_prec": 0.75,
+  "overall": 0.925,
+  "by_type": {
+   "multi_calc": "3/4",
+   "reverse": "5/7",
+   "single": "23/23"
+  },
+  "avg_seconds": 0.6535,
+  "avg_tool_steps": 0.0,
+  "config": {
+   "model": "gemma-4-E4B-it",
+   "embed_model": "BAAI/bge-small-en-v1.5",
+   "retriever": "dense",
+   "chunk_words": 250,
+   "top_k": 5,
+   "min_score": 0.0
+  }
+ }
+}
