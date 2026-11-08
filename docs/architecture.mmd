@@ -1,0 +1,27 @@
+flowchart TB
+  subgraph Offline["Offline (scripts/)"]
+    direction LR
+    W[Wikipedia API<br/>77 province articles] -->|fetch_corpus.py| R[(data/raw/*.json<br/>pinned revid)]
+    R -->|chunking.py<br/>60-word, section-aware| C[1 chunk = province + section + text]
+    C -->|bge-small-en-v1.5<br/>fastembed, CPU| V[(vectors.npy<br/>+ BM25)]
+  end
+  subgraph Online["Online (app/)"]
+    U[Browser UI<br/>static/index.html] -->|POST /api/ask/stream| S[FastAPI server.py<br/>rate limit, Pydantic request]
+    S -->|mode=rag| G[rag.py<br/>retrieve top-5, min_score 0.72]
+    S -->|mode=agent| A[agent.py<br/>tool loop, max 5 steps]
+    A -->|allow-listed, validated| T1[search_provinces]
+    A -->|allow-listed, validated| T2[calculator<br/>AST arithmetic only]
+    T1 --> V
+    G --> V
+    G -->|numbered sources| L[gemma-4-E4B-it<br/>class proxy, temp 0]
+    A -->|messages + tools| L
+    L -->|tool_calls| A
+    L -->|JSON answer| P[Pydantic ModelAnswer<br/>+ citation check]
+    P -->|SSE: step / final| U
+  end
+  subgraph Eval["Evaluation (eval/)"]
+    direction LR
+    Q[("40 test Qs, 22 dev Qs")] --> E1["eval_retrieval.py<br/>hit at 1, recall at 5, MRR"]
+    Q --> E2[tune_min_score.py<br/>dev only]
+    Q --> E3[eval_answers.py<br/>accuracy, abstention, citations]
+  end
