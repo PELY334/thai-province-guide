@@ -33,10 +33,10 @@ class Settings:
     model: str = _env("MODEL", "gemma-4-E4B-it")
     embed_model: str = _env("EMBED_MODEL", "BAAI/bge-small-en-v1.5")
     # Defaults below were chosen by the sweeps in eval/eval_retrieval.py (see README).
-    chunk_words: int = int(_env("CHUNK_WORDS", "120"))
+    chunk_words: int = int(_env("CHUNK_WORDS", "60"))
     top_k: int = int(_env("TOP_K", "5"))
-    min_score: float = float(_env("MIN_SCORE", "0.0"))
-    retriever: str = _env("RETRIEVER", "hybrid")  # dense | bm25 | hybrid
+    min_score: float = float(_env("MIN_SCORE", "0.73"))
+    retriever: str = _env("RETRIEVER", "dense")  # dense | bm25 | hybrid
     max_agent_steps: int = int(_env("MAX_AGENT_STEPS", "5"))
     llm_timeout: float = float(_env("LLM_TIMEOUT", "60"))
 
