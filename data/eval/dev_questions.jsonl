@@ -1,0 +1,22 @@
+{"id": "d01", "type": "dev_single", "question": "What is the provincial tree of Amnat Charoen?", "answers": ["hopea ferrea"], "all_required": false, "evidence": [{"doc": "amnat_charoen", "text": "The provincial tree is Hopea ferrea"}]}
+{"id": "d02", "type": "dev_single", "question": "What does the seal of Ang Thong province show?", "answers": ["ears of rice", "rice"], "all_required": false, "evidence": [{"doc": "ang_thong", "text": "golden ears of rice in a bowl of water"}]}
+{"id": "d03", "type": "dev_single", "question": "What is the provincial flower of Chai Nat?", "answers": ["rainbow shower", "cassia javanica"], "all_required": false, "evidence": [{"doc": "chai_nat", "text": "Rainbow Shower tree (Cassia javanica)"}]}
+{"id": "d04", "type": "dev_single", "question": "How high is Khao Phanom Bencha in Krabi?", "answers": ["1,397", "1397"], "all_required": false, "evidence": [{"doc": "krabi", "text": "1,397 metres"}]}
+{"id": "d05", "type": "dev_single", "question": "What is the provincial aquatic life of Lamphun?", "answers": ["chubby frog", "glyphoglossus"], "all_required": false, "evidence": [{"doc": "lamphun", "text": "chubby frog (Glyphoglossus molossus)"}]}
+{"id": "d06", "type": "dev_single", "question": "What animal is on the provincial seal of Nakhon Nayok?", "answers": ["elephant"], "all_required": false, "evidence": [{"doc": "nakhon_nayok", "text": "an elephant holding an ear of rice"}]}
+{"id": "d07", "type": "dev_single", "question": "Where is the Phraya Tani cannon displayed today?", "answers": ["ministry of defence"], "all_required": false, "evidence": [{"doc": "pattani", "text": "in front of the Ministry of Defence in Bangkok"}]}
+{"id": "d08", "type": "dev_single", "question": "Which island is shown on the seal of Rayong province?", "answers": ["ko samet"], "all_required": false, "evidence": [{"doc": "rayong", "text": "The seal of the province shows the island Ko Samet"}]}
+{"id": "d09", "type": "dev_single", "question": "Which Khmer ruin appears on the provincial seal of Sa Kaeo?", "answers": ["prasat khao noi si chompu", "khao noi"], "all_required": false, "evidence": [{"doc": "sa_kaeo", "text": "Prasat Khao Noi Si Chompu"}]}
+{"id": "d10", "type": "dev_single", "question": "What does Phra Phutthabat mean?", "answers": ["footprint of buddha"], "all_required": false, "evidence": [{"doc": "saraburi", "text": "Phra Phutthabat means footprint of Buddha"}]}
+{"id": "d11", "type": "dev_single", "question": "Which ores were mined in Yala originally?", "answers": ["tin", "tungsten"], "all_required": false, "evidence": [{"doc": "yala", "text": "tin and tungsten ores"}]}
+{"id": "d12", "type": "dev_single", "question": "What does the lighthouse bridge on Trang's seal refer to?", "answers": ["seaport"], "all_required": false, "evidence": [{"doc": "trang", "text": "Trang as a seaport trading with foreign countries"}]}
+{"id": "d13", "type": "dev_unanswerable", "question": "What is the provincial flower of Kedah?", "answers": [], "all_required": false, "evidence": []}
+{"id": "d14", "type": "dev_unanswerable", "question": "Who designed the Petronas Towers?", "answers": [], "all_required": false, "evidence": []}
+{"id": "d15", "type": "dev_unanswerable", "question": "What time does the Chatuchak weekend market open?", "answers": [], "all_required": false, "evidence": []}
+{"id": "d16", "type": "dev_unanswerable", "question": "How much does a Bangkok to Chiang Mai flight cost?", "answers": [], "all_required": false, "evidence": []}
+{"id": "d17", "type": "dev_unanswerable", "question": "What is the capital of Myanmar?", "answers": [], "all_required": false, "evidence": []}
+{"id": "d18", "type": "dev_unanswerable", "question": "Which football club won the 2025 Thai League 1?", "answers": [], "all_required": false, "evidence": []}
+{"id": "d19", "type": "dev_unanswerable", "question": "What is the recipe for green curry?", "answers": [], "all_required": false, "evidence": []}
+{"id": "d20", "type": "dev_unanswerable", "question": "How many temples are in Luang Prabang?", "answers": [], "all_required": false, "evidence": []}
+{"id": "d21", "type": "dev_unanswerable", "question": "What is the visa fee for entering Thailand?", "answers": [], "all_required": false, "evidence": []}
+{"id": "d22", "type": "dev_unanswerable", "question": "Who is the prime minister of Laos?", "answers": [], "all_required": false, "evidence": []}
