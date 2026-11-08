@@ -118,14 +118,14 @@ under-count correct paraphrases, which we checked by reading the per-question ou
 
 | system | answerable correct | single | reverse | multi + calc | unanswerable: abstained | citation precision |
 |---|---:|---:|---:|---:|---:|---:|
-| **closed_book** (baseline, no retrieval) | 2/34 (5.9%) | 2/23 | 0/7 | 0/4 | 4/6 | – |
+| **closed_book** (baseline, no retrieval) | 2/34 (5.9%) | 2/23 | 0/7 | 0/4 | 6/6 | – |
 | rag, naive default (250-word chunks, no floor) | 31/34 (91.2%) | 23/23 | 5/7 | 3/4 | 6/6 | 75.0% |
 | rag, 60-word chunks, no floor | 31/34 (91.2%) | 23/23 | 7/7 | 1/4 | 6/6 | 80.5% |
 | **rag** (shipped: 60 words, `MIN_SCORE` 0.72) | 30/34 (88.2%) | 23/23 | 5/7 | 2/4 | 6/6 | 84.2% |
 | **agent** (shipped, tools) | 30/34 (88.2%) | 21/23 | 5/7 | **4/4** | 6/6 | 82.5% |
 
-The same model without retrieval gets 2 of 34 facts right and invents the rest (Lampang's
-seal "features a horse"; Phuket's area "484 km²"). With retrieval it gets 30–31. The agent is
+The same model without retrieval gets 2 of 34 facts right, says "I don't know" on 16, and
+confidently invents the other 16 (Lampang's seal "features a horse"; Phuket's area "484 km²"). With retrieval it gets 30–31. The agent is
 the only system that solves all four multi-hop arithmetic questions: single-shot RAG either
 abstains or does the subtraction in its head and gets it wrong (q33: "20,736 − 10,589 =
 9,147"). Re-running every system gave the same correct/incorrect outcome on all 40 questions
@@ -178,6 +178,15 @@ mainly a cost and safety guard, not an accuracy gain, and we say so.
 - **q33 – the corpus disagrees with itself.** The Nakhon Ratchasima article gives 20,494 km²
   in one place and 20,736 km² in another. We found this through the eval and now accept
   both differences (documented in the question's `note`).
+- **Found in manual testing (not in the test set): a cited but wrong quantity.** "How much
+  larger is Chiang Mai than Lamphun?" The Lamphun article has no total area, only "total
+  forest area is 2,588 km²", and the agent subtracted that. The citation makes the error easy
+  to spot, but the system did not catch it. A check that the cited sentence matches the asked
+  quantity is the next fix.
+- **A bug in our own metric.** The first "I don't know" detector for the closed-book baseline
+  missed "I do not have specific information…", which under-counted its abstentions (4/6
+  instead of 6/6). Found by reading the outputs, fixed, unit-tested, re-scored without new
+  model calls (`--rescore`).
 - **q13 – our own label was wrong.** Bangkok's seal also shows Indra on Airavata; the agent
   answered "Bangkok" and was marked wrong. Label fixed and noted. Both label fixes were made
   before the final run, and `python eval/eval_answers.py --rescore` re-scores saved answers.
