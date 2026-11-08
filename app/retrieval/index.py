@@ -23,7 +23,7 @@ import numpy as np
 from ..config import INDEX_DIR, RAW_DIR, settings
 from .bm25 import BM25
 from .chunking import Chunk, chunk_document
-from .embed import Embedder, default_embedder
+from .embed import Embedder, get_embedder
 
 RRF_K = 60
 
@@ -106,9 +106,10 @@ def index_path(chunk_words: int, embed_model: str | None = None) -> Path:
     return INDEX_DIR / f"{name}-w{chunk_words}"
 
 
-@lru_cache(maxsize=4)
-def get_index(chunk_words: int | None = None) -> Index:
-    return Index.load(index_path(chunk_words or settings.chunk_words), default_embedder())
+@lru_cache(maxsize=8)
+def get_index(chunk_words: int | None = None, embed_model: str | None = None) -> Index:
+    model = embed_model or settings.embed_model
+    return Index.load(index_path(chunk_words or settings.chunk_words, model), get_embedder(model))
 
 
 def retrieve(query: str, k: int | None = None, mode: str | None = None,

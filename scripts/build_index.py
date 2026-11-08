@@ -14,21 +14,23 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.config import settings  # noqa: E402
-from app.retrieval.embed import default_embedder  # noqa: E402
+from app.retrieval.embed import get_embedder  # noqa: E402
 from app.retrieval.index import Index, index_path, load_corpus  # noqa: E402
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--chunk-words", type=int, nargs="+", default=[settings.chunk_words])
+    ap.add_argument("--embed-model", default=settings.embed_model,
+                    help='e.g. "BAAI/bge-small-en-v1.5" (local) or "bge-m3" (class proxy)')
     args = ap.parse_args()
     docs = load_corpus()
-    emb = default_embedder()
+    emb = get_embedder(args.embed_model)
     for w in args.chunk_words:
         t = time.time()
         idx = Index.build(docs, w, emb)
-        path = index_path(w)
-        idx.save(path, {"chunk_words": w, "embed_model": settings.embed_model,
+        path = index_path(w, args.embed_model)
+        idx.save(path, {"chunk_words": w, "embed_model": args.embed_model,
                         "n_docs": len(docs), "n_chunks": len(idx.chunks)})
         print(f"chunk_words={w}: {len(idx.chunks)} chunks from {len(docs)} docs "
               f"-> {path} ({time.time() - t:.0f}s)")
