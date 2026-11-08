@@ -27,4 +27,6 @@ def test_all_required():
 
 def test_dont_know_detector():
     assert ea.DONT_KNOW.search("I don't know the current governor.")
+    assert ea.DONT_KNOW.search("I do not have specific information about the largest camp.")
+    assert ea.DONT_KNOW.search("I do not have the current population of Vientiane.")
     assert not ea.DONT_KNOW.search("The provincial tree is the neem.")

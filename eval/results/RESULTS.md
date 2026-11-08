@@ -47,7 +47,7 @@ Floor sweep config: `bge-small-en-v1.5-w60` (dense). Retrieval-only best floor o
 
 | system | accuracy (answerable) | single | reverse | multi+calc | correct abstain | false abstain | citation precision | overall | avg s | avg tool calls |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| closed_book | 2/34 (5.9%) | 2/23 | 0/7 | 0/4 | 4/6 | 2.9% | – | 15.0% | 0.5 | 0.0 |
+| closed_book | 2/34 (5.9%) | 2/23 | 0/7 | 0/4 | 6/6 | 47.1% | – | 20.0% | 0.5 | 0.0 |
 | rag@w250_nofloor | 31/34 (91.2%) | 23/23 | 5/7 | 3/4 | 6/6 | 5.9% | 75.0% | 92.5% | 0.7 | 0.0 |
 | rag_no_floor | 31/34 (91.2%) | 23/23 | 7/7 | 1/4 | 6/6 | 5.9% | 80.5% | 92.5% | 0.7 | 0.0 |
 | rag | 30/34 (88.2%) | 23/23 | 5/7 | 2/4 | 6/6 | 8.8% | 84.2% | 90.0% | 0.6 | 0.0 |

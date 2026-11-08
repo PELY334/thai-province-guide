@@ -38,7 +38,8 @@ from app.agent import run_agent  # noqa: E402
 from app.config import EVAL_DIR, RESULTS_DIR, settings  # noqa: E402
 from app.rag import answer_closed_book, answer_rag  # noqa: E402
 
-DONT_KNOW = re.compile(r"\b(don'?t know|do not know|not sure|cannot|can't|unable to|no (?:reliable |specific )?information|"
+DONT_KNOW = re.compile(r"\b(don'?t know|do not know|do(?:n'?t| not) have (?:the |any |specific |enough |information)|"
+                       r"not sure|cannot|can't|unable to|no (?:reliable |specific )?information|"
                        r"not (?:able|available|aware)|i'?m sorry|real-time|up-to-date|as of my)\b", re.I)
 
 
@@ -125,6 +126,8 @@ def main() -> int:
             for line in path.read_text("utf-8").splitlines():
                 out = json.loads(line)
                 q = by_id[out["id"]]
+                if name == "closed_book":  # its abstention is detected from the text
+                    out["abstained"] = bool(DONT_KNOW.search(out["answer"]))
                 out["correct"] = bool(q["evidence"]) and not out["abstained"] and is_correct(out["answer"], q)
                 rows.append({"q": q, "out": out, "correct": out["correct"]})
             path.write_text("".join(json.dumps(r["out"], ensure_ascii=False) + "\n" for r in rows), "utf-8")
