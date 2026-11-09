@@ -1,0 +1,20 @@
+# Render Blueprint: Dashboard -> New -> Blueprint -> pick this repo.
+# The index is built during the build step (downloads the 70 MB bge-small model once and
+# embeds the committed corpus), so the running service never touches Hugging Face.
+services:
+  - type: web
+    name: thai-province-guide
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python scripts/build_index.py
+    startCommand: uvicorn app.server:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: OPENAI_API_KEY
+        sync: false        # set in the Render dashboard, never in git
+      - key: OPENAI_BASE_URL
+        sync: false
+      - key: GLOBAL_RATE_LIMIT_PER_HOUR
+        value: "300"       # protects the shared class key on a public URL

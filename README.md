@@ -51,10 +51,19 @@ API without the UI:
 curl -X POST http://127.0.0.1:8000/api/ask -H "Content-Type: application/json" \
      -d '{"question": "What is the provincial tree of Lampang?", "mode": "rag"}'
 curl -N -X POST http://127.0.0.1:8000/api/ask/stream -H "Content-Type: application/json" \
-     -d '{"question": "How much larger is Chiang Mai than Lamphun in km2?", "mode": "agent"}'
+     -d '{"question": "How much larger is Chiang Mai than Kanchanaburi in km2?", "mode": "agent"}'
 ```
 
 Tests (offline: no key, no network, no model download): `python -m pytest -q`
+
+### Deploy on Render (free plan)
+
+`render.yaml` is a Render Blueprint. Dashboard → **New → Blueprint** → pick this repo →
+fill in `OPENAI_API_KEY` and `OPENAI_BASE_URL` when asked → **Apply**. The build step runs
+`pip install` and `scripts/build_index.py` (≈3–5 min), the health check is `/api/health`.
+A public URL spends the class key, so besides the 20-requests-per-minute-per-IP limit there
+is a global cap (`GLOBAL_RATE_LIMIT_PER_HOUR`, default 300). Free instances sleep after
+15 minutes idle; the first request after that takes ~30–60 s.
 
 ## How it works
 

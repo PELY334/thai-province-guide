@@ -29,3 +29,17 @@ def test_stream_emits_final_and_done(monkeypatch):
     with TestClient(server.app) as c:
         body = c.post("/api/ask/stream", json={"question": "Largest island?", "mode": "rag"}).text
     assert "event: final" in body and body.rstrip().endswith("data: {}")
+
+
+def test_global_hourly_cap(monkeypatch):
+    monkeypatch.setattr(server, "get_index", lambda: None)
+    monkeypatch.setattr(server, "answer_rag", _fake)
+    monkeypatch.setattr(server, "GLOBAL_LIMIT_PER_HOUR", 2)
+    server._hits.clear()
+    with TestClient(server.app) as c:
+        body = {"question": "Largest island in Trat?", "mode": "rag"}
+        assert c.post("/api/ask", json=body).status_code == 200
+        assert c.post("/api/ask", json=body, headers={"x-forwarded-for": "1.2.3.4"}).status_code == 200
+        r = c.post("/api/ask", json=body, headers={"x-forwarded-for": "5.6.7.8"})
+        assert r.status_code == 429 and "busy" in r.json()["detail"]
+    server._hits.clear()

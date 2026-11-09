@@ -13,6 +13,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import os
 import time
 from contextlib import asynccontextmanager
 from collections import defaultdict, deque
@@ -45,8 +46,9 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Thai Province Guide", lifespan=lifespan)
 
-# ── per-IP rate limit (20 requests / minute) ─────────────────────────────────────
+# ── per-IP rate limit (20 requests / minute) + a global hourly cap ──────────────
 _hits: dict[str, deque] = defaultdict(deque)
+GLOBAL_LIMIT_PER_HOUR = int(os.getenv("GLOBAL_RATE_LIMIT_PER_HOUR", "300"))
 
 
 def rate_limit(request: Request, limit: int = 20, window: float = 60.0) -> None:
@@ -57,7 +59,14 @@ def rate_limit(request: Request, limit: int = 20, window: float = 60.0) -> None:
         q.popleft()
     if len(q) >= limit:
         raise HTTPException(429, "Too many requests.", headers={"Retry-After": "30"})
+    # global cap across all visitors, so a public deployment can't drain the class key
+    g = _hits["__global__"]
+    while g and now - g[0] > 3600:
+        g.popleft()
+    if len(g) >= GLOBAL_LIMIT_PER_HOUR:
+        raise HTTPException(429, "The demo is busy, try again later.", headers={"Retry-After": "300"})
     q.append(now)
+    g.append(now)
 
 
 def upstream_errors(e: Exception) -> HTTPException:
