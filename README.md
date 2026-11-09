@@ -29,7 +29,7 @@ proxy (`from openai import OpenAI`, `model="gemma-4-E4B-it"`).
 Needs Python 3.11+ and the class proxy key. Tested on Windows 11 / Python 3.14.
 
 ```bash
-git clone https://github.com/<you>/thai-province-guide && cd thai-province-guide
+git clone https://github.com/PELY334/thai-province-guide && cd thai-province-guide
 python -m venv .venv
 source .venv/bin/activate            # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
